@@ -1,6 +1,6 @@
 module TestShow
 
-using DataFrames, Random, Test
+using DataFrames, Dates, Random, Test
 
 function capture_stdout(f::Function)
     oldstdout = stdout
@@ -279,7 +279,7 @@ end
     │ 1   │ a      │"""
 end
 
-@testset "Test showing special types: strings with escapes, categorical and BigFloat" begin
+@testset "Test showing special types: strings with escapes, categorical, BigFloat, and dates" begin
     df = DataFrame(a = ["1\n1", "2\t2", "3\r3", "4\$4", "5\"5", "6\\6"])
     @test sprint(show, df) == """
     6×1 DataFrame
@@ -311,6 +311,14 @@ end
     ├─────┼───────────┤
     │ 1   │ 1.0       │
     │ 2   │ missing   │"""
+
+    df = DataFrame(a = [Date(2020, 2, 11)], b = [DateTime(2020, 2, 11, 15)], c = [Day(1)])
+    @test sprint(show, df) == """
+    1×3 DataFrame
+    │ Row │ a          │ b                   │ c     │
+    │     │ Date       │ DateTime            │ Day   │
+    ├─────┼────────────┼─────────────────────┼───────┤
+    │ 1   │ 2020-02-11 │ 2020-02-11T15:00:00 │ 1 day │"""
 end
 
 @testset "Test using :compact parameter of IOContext" begin

@@ -24,9 +24,13 @@ end
 Render a value to an IO object. Unlike
 `show`, render strings without surrounding quote marks.
 """
-ourshow(io::IO, x::Any) =
-    show(IOContext(io, :compact=>get(io, :compact, true), :typeinfo=>typeof(x)), x)
+function ourshow(io::IO, x::Any)
+    ctxt = IOContext(io, :compact=>get(io, :compact, true), :typeinfo=>typeof(x))
+    show(ctxt, "text/plain", x)
+end
+
 ourshow(io::IO, x::AbstractString) = escape_string(io, x, "")
+ourshow(io::IO, x::Char) = ourshow(io, repr(x))
 ourshow(io::IO, x::Symbol) = ourshow(io, string(x))
 ourshow(io::IO, x::Nothing) = nothing
 
