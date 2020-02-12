@@ -34,9 +34,12 @@ ourshow(io::IO, x::Symbol) = ourshow(io, string(x))
 ourshow(io::IO, x::Nothing) = nothing
 
 # https://github.com/JuliaLang/julia/pull/34730
-if VERSION < v"1.5.0-DEV.261"
-    ourshow(io::IO, x::AbstractChar) = ourshow(io, repr(x))
-end
+# if VERSION < v"1.5.0-DEV.261"
+    function ourshow(io::IO, x::T) where T <: Union{AbstractChar, Irrational}
+        ctxt = IOContext(io, :compact=>get(io, :compact, true), :typeinfo=>typeof(x))
+        show(ctxt, x)
+    end
+# end
 
 """Return compact string representation of type T"""
 function compacttype(T::Type, maxwidth::Int=8)
