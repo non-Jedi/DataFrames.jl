@@ -30,9 +30,13 @@ function ourshow(io::IO, x::Any)
 end
 
 ourshow(io::IO, x::AbstractString) = escape_string(io, x, "")
-ourshow(io::IO, x::AbstractChar) = ourshow(io, repr(x))
 ourshow(io::IO, x::Symbol) = ourshow(io, string(x))
 ourshow(io::IO, x::Nothing) = nothing
+
+# https://github.com/JuliaLang/julia/pull/34730
+if VERSION < v"1.5.0-DEV.261"
+    ourshow(io::IO, x::AbstractChar) = ourshow(io, repr(x))
+end
 
 """Return compact string representation of type T"""
 function compacttype(T::Type, maxwidth::Int=8)
