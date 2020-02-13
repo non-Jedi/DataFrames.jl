@@ -20,6 +20,13 @@ end
 Base.summary(dfrs::DataFrameRows) = "$(length(dfrs))-element DataFrameRows"
 Base.summary(io::IO, dfrs::DataFrameRows) = print(io, summary(dfrs))
 
+# Trying to iterate over a DataFrame directly (for row in df) tends to
+# be one of the first things a beginner does. Allowing a MethodError
+# to be raised is more "correct", but an explanation of the
+# appropriate function for iterating rows is more friendly.
+Base.iterate(::AbstractDataFrame) =
+    error("AbstractDataFrame is not iterable. Use eachrow(adf) to iterate rows.")
+
 """
     eachrow(df::AbstractDataFrame)
 
