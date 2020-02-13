@@ -86,7 +86,7 @@ s2[2, :B] = "M"
 @test df[3, :B] == "M"
 @test view(s2, 1:1:2, :) == view(df, [1,3], :)
 
-@test_throws MethodError for x in df; end
+@test_throws ErrorException for x in df; end
 
 @testset "mapcols" begin
     df_mapcols = DataFrame(a=1:10, b=11:20)
